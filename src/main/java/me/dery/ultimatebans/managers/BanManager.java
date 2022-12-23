@@ -109,7 +109,7 @@ public class BanManager {
 
             PreparedStatement createBansTable = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `ub_bans` (" +
                     "`id` INT PRIMARY KEY AUTO_INCREMENT," +
-                    "`until` DATETIME NOT NULL," +
+                    "`until` DATETIME NULL," +
                     "`when` DATETIME NULL," +
                     "`reason` VARCHAR(100) NULL," +
                     "`applied_by` VARCHAR(16) NOT NULL," +
@@ -139,10 +139,10 @@ public class BanManager {
                     int id = bansSet.getInt("id");
                     if (nextId < id) nextId = id;
 
-                    long until = bansSet.getDate("until").getTime();
+                    Date until = bansSet.getDate("until");
                     player.getBanHistory().add(new Ban(
                             id,
-                            until == 0 ? -1 : until,
+                            until == null ? -1 : until.getTime(),
                             bansSet.getDate("when").getTime(),
                             bansSet.getString("reason"),
                             bansSet.getString("applied_by"),
